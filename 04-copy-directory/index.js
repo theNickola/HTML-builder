@@ -9,11 +9,11 @@ const copyDir = (pathDir, pathNewDir) => {
     for (const file of files) {
       if (file.isFile()) {
         fsPromises.copyFile(
-          path.join('04-copy-directory', 'files', file.name), 
-          path.join('04-copy-directory', 'files-copy', file.name));
+          path.join(pathDir, file.name), 
+          path.join(pathNewDir, file.name));
       }
       else if (file.isDirectory())
-        fs.mkdir(path.join('04-copy-directory/files-copy',file.name), {recursive: true}, () => false );
+        fs.mkdir(path.join(pathNewDir, file.name), {recursive: true}, () => false );
     }
   });
 };
