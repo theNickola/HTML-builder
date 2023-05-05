@@ -12,8 +12,10 @@ const copyDir = (pathDir, pathNewDir) => {
           path.join(pathDir, file.name), 
           path.join(pathNewDir, file.name));
       }
-      else if (file.isDirectory())
+      else if (file.isDirectory()) {
         fs.mkdir(path.join(pathNewDir, file.name), {recursive: true}, () => false );
+        copyDir(path.join(pathDir, file.name), path.join(pathNewDir, file.name));
+      }
     }
   });
 };
