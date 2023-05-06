@@ -1,7 +1,8 @@
 const { stdin, stdout } = process;
 const fs = require('fs');
+const path = require('path');
 
-const output = fs.createWriteStream('02-write-file/text.txt');
+const output = fs.createWriteStream(path.join('02-write-file', 'text.txt'));
 stdout.write('Приветствую! Введи какой-нибудь текст:\n');
 stdin.on('data', text => {
   if (text.toString().trim()  === 'exit') {
