@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fsPromises = fs.promises;
 const path = require('path');
 
 const pathDir = path.join('06-build-page', 'project-dist');
@@ -7,7 +8,28 @@ const pathTemplateHtml = path.join('06-build-page', 'template.html');
 const pathDirComponents = path.join('06-build-page', 'components');
 const pathDirStyles = path.join('06-build-page', 'styles');
 const pathBundleCSS = path.join(pathDir, 'style.css');
+const pathAssets = path.join('06-build-page', 'assets');
+const pathProjectAssets = path.join(pathDir, 'assets');
 let newData = '';
+
+const copyDir = (pathDir, pathNewDir) => {
+  fs.rm(pathNewDir, { recursive: true, force: true }, () => {
+    fs.readdir(pathDir, {withFileTypes: true}, (error, files) => {
+      fs.mkdir(pathNewDir, {recursive: true}, () => false );
+      for (const file of files) {
+        if (file.isFile()) {
+          fsPromises.copyFile(
+            path.join(pathDir, file.name), 
+            path.join(pathNewDir, file.name));
+        }
+        else if (file.isDirectory()) {
+          fs.mkdir(path.join(pathNewDir, file.name), {recursive: true}, () => false );
+          copyDir(path.join(pathDir, file.name), path.join(pathNewDir, file.name));
+        }
+      }
+    });
+  });
+};
 
 const collectStyles = (dirStyles, bundle) => {
   fs.readdir(dirStyles, {withFileTypes: true}, (error, files) => {
@@ -38,4 +60,5 @@ fs.mkdir(pathDir, {recursive: true}, () => {
     });
   });
   collectStyles(pathDirStyles, pathBundleCSS);
+  copyDir(pathAssets, pathProjectAssets);
 });
