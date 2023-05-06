@@ -43,22 +43,23 @@ const collectStyles = (dirStyles, bundle) => {
     }
   });
 };
-
-fs.mkdir(pathDir, {recursive: true}, () => {
-  fs.readFile(pathTemplateHtml, 'utf-8', (err, dataTemplate) => {
-    newData = dataTemplate.toString();
-    fs.readdir(pathDirComponents, {withFileTypes: true}, (error, files) => {
-      for (const file of files) {
-        if (file.isFile() && path.extname(file.name).toLowerCase() === '.html') {
-          fs.readFile(path.join(pathDirComponents, file.name), 'utf-8', (err, dataComponent) => {
-            const onlyNameFile = file.name.toLowerCase().replace('.html','');
-            newData = newData.replace(`{{${onlyNameFile}}}`, dataComponent);
-            fs.writeFile(pathNewHtml, newData, () => null);
-          });
+fs.rm(pathDir, { recursive: true, force: true }, () => {
+  fs.mkdir(pathDir, {recursive: true}, () => {
+    fs.readFile(pathTemplateHtml, 'utf-8', (err, dataTemplate) => {
+      newData = dataTemplate.toString();
+      fs.readdir(pathDirComponents, {withFileTypes: true}, (error, files) => {
+        for (const file of files) {
+          if (file.isFile() && path.extname(file.name).toLowerCase() === '.html') {
+            fs.readFile(path.join(pathDirComponents, file.name), 'utf-8', (err, dataComponent) => {
+              const onlyNameFile = file.name.toLowerCase().replace('.html','');
+              newData = newData.replace(`{{${onlyNameFile}}}`, dataComponent);
+              fs.writeFile(pathNewHtml, newData, () => null);
+            });
+          }
         }
-      }
+      });
     });
+    collectStyles(pathDirStyles, pathBundleCSS);
+    copyDir(pathAssets, pathProjectAssets);
   });
-  collectStyles(pathDirStyles, pathBundleCSS);
-  copyDir(pathAssets, pathProjectAssets);
 });
