@@ -6,7 +6,7 @@ const pathNewHtml = path.join(pathDir, 'index.html');
 const pathTemplateHtml = path.join('06-build-page', 'template.html');
 const pathDirComponents = path.join('06-build-page', 'components');
 const pathDirStyles = path.join('06-build-page', 'styles');
-const pathBundleCSS = path.join(pathDir, 'styles.css');
+const pathBundleCSS = path.join(pathDir, 'style.css');
 let newData = '';
 
 const collectStyles = (dirStyles, bundle) => {
@@ -37,4 +37,5 @@ fs.mkdir(pathDir, {recursive: true}, () => {
       }
     });
   });
+  collectStyles(pathDirStyles, pathBundleCSS);
 });
